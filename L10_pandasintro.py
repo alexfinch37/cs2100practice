@@ -13,7 +13,7 @@ import pandas as pd
 ###############
 
 DATA_FNAME: str = "L10_coffee.csv"
-DATA: dict[str, Any] = {
+DATA: dict[str, list[Any]] = {
     'roaster': ['dunkin', 'onyx', 'pavement'],
     'name': ['original blend', 'ethiopia bochesa natural', 'Rathskeller'],
     'grams': [2040, 283, 20],
