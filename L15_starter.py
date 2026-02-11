@@ -44,28 +44,26 @@ def create_email(recipient: str, sender: str, subject: str) -> str:
     
     return f"From: {sender}\nTo: {recipient}\nSubject: {subject}"
 
-class TestCreateEmail(unittest.TestCase):
-    """tests for create email"""
-    def test_create_email_valid(self) -> None:
-        """testing with all valid imports"""
-        result = create_email("arnav@gmail.com", "alex@finch.com", "arnav is lame")
-        self.assertEqual(result, "From: alex@finch.com\nTo: arnav@gmail.com\nSubject: arnav is lame")
-
-    def test_create_email_invalid(self) -> None:
-        """testing with all bad parameters"""
-        self.assertRaises(ValueError, create_email, None, "arnav@gmail.com", "Hello")
-
-    def test_some_parameters(self) -> None:
-        """testing with some of the parameters"""
-        result = create_email("arnav@gmail.com", None, None)
-        self.assertEqual(result, "From: noreply@northeastern.edu\nTo: arnav@gmail.com\nSubject: No Subject")
-
 
 # 2. Design and test find_common,
 #    which identifies the elements
 #    that exist in both supplied lists
 
-# TODO: find_common
+def find_common(lst1: list[Any], lst2: list[Any]) -> list[Any]:
+    """
+    Docstring for find_common
+    
+    :param lst1: Description
+    :type lst1: List[Any]
+    :param lst2: Description
+    :type lst2: List[Any]
+    """
+    
+    union_list = []
+    for item in lst1:
+        if item in lst2:
+            union_list.append(item)
+    return union_list
 
 
 # 3. Design and test swap_pairs,
@@ -73,7 +71,20 @@ class TestCreateEmail(unittest.TestCase):
 #    and produces a new list where
 #    the coordinates have been swapped
 
-# TODO: swap_pairs
+def swap_pairs(lst: list[tuple[int, int]]) -> list[tuple[int, int]]:
+    """
+    Docstring for swap_pairs
+    
+    :param lst: Description
+    :type lst: list[tuple]
+    :return: Description
+    :rtype: list[tuple]
+    """
+
+    new_pairs: list[tuple[int, int]] = []
+    for pair in lst:
+        new_pairs.append((pair[1], pair[0]))
+    return new_pairs
 
 
 # 4. Design and test second_connections,
@@ -208,6 +219,44 @@ class PracticeTest(unittest.TestCase):
         #     "Dune: 1 page(s) in!"
         # )
 
+
+
+class TestCreateEmail(unittest.TestCase):
+    """tests for create email"""
+    def test_create_email_valid(self) -> None:
+        """testing with all valid imports"""
+        result = create_email("arnav@gmail.com", "alex@finch.com", "arnav is lame")
+        self.assertEqual(result, "From: alex@finch.com\nTo: arnav@gmail.com\nSubject: arnav is lame")
+
+    def test_create_email_invalid(self) -> None:
+        """testing with all bad parameters"""
+        self.assertRaises(ValueError, create_email, None, "arnav@gmail.com", "Hello")
+
+    def test_some_parameters(self) -> None:
+        """testing with some of the parameters"""
+        result = create_email("arnav@gmail.com", None, None)
+        self.assertEqual(result, "From: noreply@northeastern.edu\nTo: arnav@gmail.com\nSubject: No Subject")
+
+    def test_common_list_valid(self) -> None:
+        """testing longer list with valid input"""
+        first_list = ["hello", "testing", "1", "2", "3"]
+        second_list = ["hello", "1", "3", "4"]
+        result = find_common(first_list, second_list)
+        self.assertEqual(result, ["hello", "1", "3"])
+
+    def test_common_list_valid_mixed(self) -> None:
+        """testing longer list with valid input"""
+        first_list: list[Any] = ["hello","testing", "1", "2", 3]
+        second_list: list[Any] = ["hello", "1", 3, "4"]
+        result = find_common(first_list, second_list)
+        self.assertEqual(result, ["hello", "1", 3])
+
+    def test_common_list_valid_longer_second(self) -> None:
+        """testing longer list with valid input"""
+        first_list: list[Any] = ["hello","testing", "1", "2", 3, "17"]
+        second_list: list[Any] = ["hello", "1", 3, "4", "5", "17", "testing"]
+        result = find_common(first_list, second_list)
+        self.assertEqual(result, ["hello", "1", 3, "17", "testing"])
 
 ##################################################
 
