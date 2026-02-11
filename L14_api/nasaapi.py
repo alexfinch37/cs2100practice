@@ -181,7 +181,7 @@ def display_image_from_url(url: str, title: str, subtitle: str) -> None:
 def main() -> None:
     """Start!"""
 
-    info: NasaPic = get_pic_info(True)
+    info: NasaPic = get_pic_info(True, date="2023-06-24")
     display_image_from_url(
         info.url,
         info.title,

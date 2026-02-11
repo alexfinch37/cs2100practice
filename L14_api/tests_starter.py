@@ -34,7 +34,9 @@ class TestAPI(unittest.TestCase):
         """TODO: put your tests here!!"""
 
         self.assertFalse(is_valid_date(''))
-        # self.assertTrue(is_valid_date('2026-02-09'))
+        self.assertTrue(is_valid_date('2026-02-09'))
+        self.assertTrue(is_valid_date("2012-12-12"))
+        self.assertFalse(is_valid_date("2029-13-32"))
 
 
     def test_isvaliddate(self) -> None:
@@ -87,6 +89,9 @@ class TestAPI(unittest.TestCase):
         result = process_nasa_response(True, response)
 
         self.assertEqual(result.date, '2026-02-06')
+        self.assertEqual(result.title, 'Supernova Remnant Cassiopeia A')
+        self.assertNotEqual(result.title, 'Supernova Remnant Cassiopeia B')
+        self.assertEqual(result.explanation, 'Massive stars in our Milky Way Galaxy live spectacular lives...')
 
 
     def test_processnasaresponse(self) -> None:
