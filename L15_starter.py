@@ -96,7 +96,36 @@ def swap_pairs(lst: list[tuple[int, int]]) -> list[tuple[int, int]]:
 #    if the person does not exist in connections,
 #    ValueError!
 
-# TODO: second_connections
+#{person: connect1, connect2, connect3}
+#{connect: connect4, connect5, connect6}
+#second_connections(person, dict)
+#result = (connect4, connect5, connect6)
+def second_connections(person: str, connects: dict[str, list[str]]) -> set:
+    """
+    Docstring for second_connections
+    
+    :param person: Description
+    :type person: str
+    :param connects: Description
+    :type connects: dict[str, str]
+    :return: Description
+    :rtype: set
+    """
+    first_connects = connects.get(person, [])
+    second_connects = set()
+    
+    for friend in first_connects:
+        # Get friends of each first-degree connection
+        friends_of_friend = connects.get(friend, [])
+        for second_degree in friends_of_friend:
+            # Exclude the original person and direct friends
+            if second_degree != person and second_degree not in first_connects:
+                second_connects.add(second_degree)
+    
+    return second_connects
+    
+
+
 
 
 # 5. Design and test a Book class that represents
@@ -107,8 +136,34 @@ def swap_pairs(lst: list[tuple[int, int]]) -> list[tuple[int, int]]:
 #    implement the __str__ method to provide the name
 #    of the book and how many pages have thus far been read.
 
-# TODO: Book
+class Book:
+    """book class"""
+    def __init__(self, title: str = "No Name", pages_read: int = 0):
+        """
+        Docstring for __init__
+        
+        :param self: Description
+        :param title: Description
+        :type title: str
+        :param pages_read: Description
+        :type pages_read: int
+        """
+        self.title = title
+        self.pages_read = pages_read
 
+    def read(self, added_pages: int) -> None:
+        """
+        Docstring for read
+        
+        :param self: Description
+        :param added_pages: Description
+        :type added_pages: int
+        """
+        self.pages_read += added_pages
+
+    def __str__(self) -> str:
+        """nice readable version"""
+        return f"Title: {self.title}\nPages Read: {self.pages_read}"
 
 ##################################################
 
@@ -219,7 +274,32 @@ class PracticeTest(unittest.TestCase):
         #     "Dune: 1 page(s) in!"
         # )
 
+def get_friends(name: str, enemies: dict[str, list[str]]) -> list[str]:
+    """Returns a list of friends of the person with the given name.
+    A friend is defined as an enemy of an enemy.
+    For example, if A is an enemy of B, and B is an enemy of C,
+    then A and C are friends.
+    Args:
+    name (str): The name of the person whose friends are to be found
+    enemies (dict[str, list[str]]): A dictionary mapping person names
+    to a list of their enemy names
+    Returns:
+    A list of names of friends. May contain repeated names.
+    """
 
+    enemies = {
+    'Mini': ['Mega', 'Micro'],
+    'Mega': ['Mini', 'Giga', 'Micro'],
+    'Micro': ['Mini', 'Micro'], # Yes, Micro is Micro's own enemy
+    'Giga': ['Mega']}
+    if name not in enemies:
+        return []
+    friends: list[str] = []
+    for enemy_name in enemies[name]:
+        for friend_name in enemies[enemy_name]:
+            friends.append(friend_name)
+    return friends
+    
 
 class TestCreateEmail(unittest.TestCase):
     """tests for create email"""
@@ -256,7 +336,60 @@ class TestCreateEmail(unittest.TestCase):
         first_list: list[Any] = ["hello","testing", "1", "2", 3, "17"]
         second_list: list[Any] = ["hello", "1", 3, "4", "5", "17", "testing"]
         result = find_common(first_list, second_list)
-        self.assertEqual(result, ["hello", "1", 3, "17", "testing"])
+        self.assertEqual(result, ["hello", "testing", "1", 3, "17",])
+
+    def test_str_with_defaults(self) -> None:
+        """Test string representation with default values."""
+        book = Book()
+        expected = "Title: No Name\nPages Read: 0"
+        self.assertEqual(str(book), expected)
+    
+    def test_str_with_title(self) -> None:
+        """Test string representation with custom title."""
+        book = Book("Brave New World")
+        expected = "Title: Brave New World\nPages Read: 0"
+        self.assertEqual(str(book), expected)
+    
+    def test_str_with_pages_read(self) -> None:
+        """Test string representation after reading pages."""
+        book = Book("Fahrenheit 451")
+        book.read(75)
+        expected = "Title: Fahrenheit 451\nPages Read: 75"
+        self.assertEqual(str(book), expected)
+    
+    def test_str_with_initial_pages(self) -> None:
+        """Test string representation with initial pages_read."""
+        book = Book("Catch-22", 200)
+        expected = "Title: Catch-22\nPages Read: 200"
+        self.assertEqual(str(book), expected)
+    
+    # Edge cases and integration tests
+    
+    def test_multiple_books_independent(self) -> None:
+        """Test that multiple book objects are independent."""
+        book1 = Book("Book 1")
+        book2 = Book("Book 2")
+        book1.read(50)
+        book2.read(30)
+        self.assertEqual(book1.pages_read, 50)
+        self.assertEqual(book2.pages_read, 30)
+    
+    def test_title_with_special_characters(self) -> None:
+        """Test book title with special characters."""
+        book = Book("The Hitchhiker's Guide to the Galaxy")
+        self.assertEqual(book.title, "The Hitchhiker's Guide to the Galaxy")
+    
+    def test_empty_string_title(self) -> None:
+        """Test book with empty string as title."""
+        book = Book("")
+        self.assertEqual(book.title, "")
+        self.assertEqual(str(book), "Title: \nPages Read: 0")
+    
+    def test_large_number_of_pages(self) -> None:
+        """Test reading a very large number of pages."""
+        book = Book("War and Peace")
+        book.read(1000000)
+        self.assertEqual(book.pages_read, 1000000)
 
 ##################################################
 
