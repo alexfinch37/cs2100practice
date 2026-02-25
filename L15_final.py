@@ -258,7 +258,7 @@ class PracticeTest(unittest.TestCase):
             [(1, 'a'), ('b', 2)]
         )
 
-    def test_second_connections(self):
+    def test_second_connections(self) -> None:
         """Tests second_connections"""
 
         connections = {
